@@ -53,11 +53,11 @@ import plotly.io as pio
 
 from tqdm import tqdm
 from tqdm.contrib.concurrent import process_map  
-# from matminer.datasets import load_dataset
 
 from ElMD import ElMD, EMD
 
 def main():
+    from matminer.datasets import load_dataset
     df = load_dataset("matbench_expt_gap").head(1001)
 
     df_1 = df.head(500)
@@ -387,10 +387,20 @@ class ElM2D():
         if self.verbose: 
             print("Parsing Formula")
             for i, formula in tqdm(list(enumerate(formula_list))):
-                self.input_mat[i] = ElMD(formula, metric=self.metric).ratio_vector
+                if isinstance(formula, str):
+                    self.input_mat[i] = ElMD(formula, metric=self.metric).ratio_vector
+                elif isinstance(formula, ElMD):
+                    self.input_mat[i] = formula.ratio_vector
+                else:
+                    raise TypeError("Input must be either compositional strings or ElMD objects")
         else:
             for i, formula in enumerate(formula_list):
-                self.input_mat[i] = ElMD(formula, metric=self.metric).ratio_vector
+                if isinstance(formula, str):
+                    self.input_mat[i] = ElMD(formula, metric=self.metric).ratio_vector
+                elif isinstance(formula, ElMD):
+                    self.input_mat[i] = formula.ratio_vector
+                else:
+                    raise TypeError("Input must be either compositional strings or ElMD objects")
 
         # Create input pairings
         if self.verbose: 
