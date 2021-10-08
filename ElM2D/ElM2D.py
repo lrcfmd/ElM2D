@@ -381,7 +381,7 @@ class ElM2D():
         pool_list = []
 
 
-        n_elements = len(ElMD().periodic_tab[self.metric])
+        n_elements = len(ElMD().periodic_tab)
         self.input_mat = np.ndarray(shape=(len(formula_list), n_elements), dtype=np.float64)
 
         if self.verbose: 
@@ -437,7 +437,7 @@ class ElM2D():
             distances[i] = EMD(self.input_mat[input_1], 
                                self.input_mat[input_2],
                                elmd_obj.lookup,
-                               elmd_obj.periodic_tab[self.metric])
+                               elmd_obj.periodic_tab)
 
         return distances
 
@@ -528,7 +528,7 @@ class ElM2D():
         '''
         pool_list = []
 
-        n_elements = len(ElMD().periodic_tab[self.metric])
+        n_elements = len(ElMD().periodic_tab)
         X_mat = np.ndarray(shape=(len(X), n_elements), dtype=np.float64)
         y_mat = np.ndarray(shape=(len(y), n_elements), dtype=np.float64)
 
