@@ -54,7 +54,7 @@ import plotly.io as pio
 from tqdm import tqdm
 from tqdm.contrib.concurrent import process_map  
 
-from ElMD import ElMD, EMD
+from ElMD import ElMD, elmd
 
 def main():
     from matminer.datasets import load_dataset
@@ -63,6 +63,8 @@ def main():
     df_1 = df.head(500)
     df_2 = df.tail(500)
     mapper = ElM2D(metric="mod_petti")
+    X = mapper.fit_transform(df_1["composition"])
+
     mapper.intersect(df_1["composition"], df_2["composition"])
     sorted_comps = mapper.sort(df["composition"])
     sorted_comps, sorted_inds = mapper.sort(df["composition"], return_inds=True)
@@ -247,13 +249,14 @@ class ElM2D():
         (n,n) = self.dm.shape
 
         if self.verbose: print(f"Constructing {n}x{n_components} Gram matrix")
+        # From Principles of Multivariate Analysis: A User's Perspective (page 107).
+        # We construct a centred Gram Matrix to embed the dm into a high dim space
         E = (-0.5 * self.dm**2)
 
         # Use this matrix to get column and row means
         Er = np.mat(np.mean(E,1))
         Es = np.mat(np.mean(E,0))
 
-        # From Principles of Multivariate Analysis: A User's Perspective (page 107).
         F = np.array(E - np.transpose(Er) - Es + np.mean(E))
 
         if self.verbose: print(f"Computing Eigen Decomposition")
@@ -380,25 +383,24 @@ class ElM2D():
         '''
         pool_list = []
 
-
-        n_elements = len(ElMD().periodic_tab)
-        self.input_mat = np.ndarray(shape=(len(formula_list), n_elements), dtype=np.float64)
+        # n_elements = len(ElMD().periodic_tab)
+        self.input_mat = [None for x in formula_list]
 
         if self.verbose: 
             print("Parsing Formula")
             for i, formula in tqdm(list(enumerate(formula_list))):
                 if isinstance(formula, str):
-                    self.input_mat[i] = ElMD(formula, metric=self.metric).ratio_vector
+                    self.input_mat[i] = ElMD(formula, metric=self.metric)
                 elif isinstance(formula, ElMD):
-                    self.input_mat[i] = formula.ratio_vector
+                    self.input_mat[i] = formula
                 else:
                     raise TypeError("Input must be either compositional strings or ElMD objects")
         else:
             for i, formula in enumerate(formula_list):
                 if isinstance(formula, str):
-                    self.input_mat[i] = ElMD(formula, metric=self.metric).ratio_vector
+                    self.input_mat[i] = ElMD(formula, metric=self.metric)
                 elif isinstance(formula, ElMD):
-                    self.input_mat[i] = formula.ratio_vector
+                    self.input_mat[i] = formula
                 else:
                     raise TypeError("Input must be either compositional strings or ElMD objects")
 
@@ -431,13 +433,12 @@ class ElM2D():
         Uses multiprocessing module to call the numba compiled EMD function
         '''
         distances = np.ndarray(len(input_tuple))
-        elmd_obj = ElMD(metric=self.metric)
+        # elmd_obj = ElMD(metric=self.metric)
         
         for i, (input_1, input_2) in enumerate(input_tuple):
-            distances[i] = EMD(self.input_mat[input_1], 
+            distances[i] = elmd(self.input_mat[input_1], 
                                self.input_mat[input_2],
-                               elmd_obj.lookup,
-                               elmd_obj.periodic_tab)
+                               metric=self.metric)
 
         return distances
 
