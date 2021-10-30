@@ -1,5 +1,5 @@
 {% set name = "chem_wasserstein" %}
-{% set version = "0.4.1" %}
+{% set version = "1.0.0" %}
 
 
 package:
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/chem_wasserstein-{{ version }}.tar.gz
-  sha256: 6a5ff04b8f237651d85aed7a646c4535e53dfd5cdd4921e753c7fba047b2d37c
+  sha256: 36cdaaaf63f0926340885fb0155e85f7ef44d18304b90cc39af992161511db84
 
 build:
   number: 0
@@ -19,7 +19,7 @@ requirements:
   host:
     - pip
     - flit
-    - python >=3.7,<3.10
+    - python >=3.6,<3.10
   run:
     - dist_matrix
     - elmd ==0.4.8
@@ -27,7 +27,7 @@ requirements:
     - pandas
     - plotly
     - pqdm ==0.1.0
-    - python >=3.7,<3.10
+    - python >=3.6,<3.10
     - scikit-learn
     - scipy
     - tqdm
