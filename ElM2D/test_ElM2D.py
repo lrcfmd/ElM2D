@@ -12,6 +12,7 @@ from importlib import reload
 
 from os.path import join, dirname, relpath
 
+from numpy import genfromtxt
 from numpy.testing import assert_allclose
 
 # import numpy as np
@@ -20,8 +21,9 @@ from numpy.testing import assert_allclose
 from sklearn.metrics import mean_squared_error
 from scipy.spatial.distance import squareform
 
-from ElM2D.utils.Timer import Timer
-from ElM2D import ElM2D as pip_ElM2D
+from elm2d.utils.Timer import Timer
+
+# from ElM2D import ElM2D as pip_ElM2D
 
 # from EleMD import EleMD
 import pandas as pd
@@ -32,18 +34,16 @@ target = "cuda"
 
 n_elements = len(ElMD(metric="mod_petti").periodic_tab)
 
-# # number of columns of U and V and other env vars must be set as env var before import
-os.environ["COLUMNS"] = str(n_elements)
-os.environ["USE_64"] = "0"
-os.environ["INLINE"] = "never"
-os.environ["FASTMATH"] = "1"
-os.environ["TARGET"] = target
+# # # number of columns of U and V and other env vars must be set as env var before import
+# os.environ["COLUMNS"] = str(n_elements)
+# os.environ["USE_64"] = "0"
+# os.environ["INLINE"] = "never"
+# os.environ["FASTMATH"] = "1"
+# os.environ["TARGET"] = target
 
-from ElM2D import ElM2D_  # noqa
+from elm2d.ElM2D_ import ElM2D as custom_ElM2D  # noqa
 
-reload(ElM2D_)
-
-custom_ElM2D = ElM2D_.ElM2D
+# reload(ElM2D_)
 
 
 class Testing(unittest.TestCase):
@@ -52,7 +52,8 @@ class Testing(unittest.TestCase):
         # df = pd.read_csv("train-debug.csv")
         df = pd.read_csv(join(dirname(relpath(__file__)), "stable-mp.csv"))
         formulas = df["formula"]
-        sub_formulas = formulas[0:100]
+        nformulas = 500
+        sub_formulas = formulas[:nformulas]
         with Timer("dm_wasserstein"):
             mapper.fit(sub_formulas, target=target)
             dm_wasserstein = mapper.dm
@@ -61,12 +62,23 @@ class Testing(unittest.TestCase):
         # mapper.fit(sub_formulas, target="cpu")
         # dm_wasserstein = mapper.dm
 
-        # TODO: replace check with a CSV file
-        with Timer("dm_network"):
-            mapper2 = pip_ElM2D(sub_formulas)
-            # mapper2 = ElM2D(emd_algorithm="network_simplex")
-            mapper2.fit(sub_formulas)
-            dm_network = mapper2.dm
+        # # TODO: replace check with a CSV file
+        # with Timer("dm_network"):
+        #     mapper2 = pip_ElM2D(sub_formulas)
+        #     # mapper2 = ElM2D(emd_algorithm="network_simplex")
+        #     mapper2.fit(sub_formulas)
+        #     dm_network = mapper2.dm
+
+        # 500 x 500 distance matrix
+        if nformulas > 500:
+            raise ValueError(
+                "nformulas>500, should be <=500 (nformulas=={})".format(nformulas)
+            )
+        dm_network = genfromtxt(
+            join(dirname(relpath(__file__)), "ElM2D_0-4-0_ElMD_0-4-3.csv"),
+            delimiter=",",
+        )
+        dm_network = dm_network[:nformulas, :nformulas]
 
         # with Timer("dm_elemd"):
         #     mod_petti = EleMD(scale="mod_pettifor")
