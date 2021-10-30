@@ -22,7 +22,7 @@ classifiers = [
     ]
 dynamic = ["version", "description"]
 
-requires-python = ">=3.7,<=3.9"
+requires-python = ">=3.7,<3.10"
 
 dependencies = [
     "pqdm ==0.1.0",
@@ -34,7 +34,6 @@ dependencies = [
     "umap-learn",
     "dist_matrix",
     "ElMD ==0.4.8",
-    "matminer",
     "scikit_learn",
 ]
 
