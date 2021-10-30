@@ -21,7 +21,7 @@ requirements:
     - flit
     - python >=3.6,<3.10
   run:
-    - dist_matrix >= 1.0.1
+    - dist_matrix >= 1.0.2
     - elmd ==0.4.8
     - numba >=0.53.1
     - pandas
