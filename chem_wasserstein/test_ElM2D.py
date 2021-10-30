@@ -21,7 +21,7 @@ from numpy.testing import assert_allclose
 from sklearn.metrics import mean_squared_error
 from scipy.spatial.distance import squareform
 
-from elm2d.utils.Timer import Timer
+from .utils.Timer import Timer
 
 # from ElM2D import ElM2D as pip_ElM2D
 
@@ -41,7 +41,7 @@ n_elements = len(ElMD(metric="mod_petti").periodic_tab)
 # os.environ["FASTMATH"] = "1"
 # os.environ["TARGET"] = target
 
-from elm2d.ElM2D_ import ElM2D as custom_ElM2D  # noqa
+from .ElM2D_ import ElM2D as custom_ElM2D  # noqa
 
 # reload(ElM2D_)
 
