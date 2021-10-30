@@ -5,7 +5,7 @@ Recommended installation through `pip` with python 3.7.
 
 ```
 pip install python==3.7
-pip install ElM2D
+pip install chem_wasserstein
 ```
 
 For the background theory, please read our paper ["The Earth Mover’s Distance as a Metric for the Space of Inorganic Compositions"](https://pubs.acs.org/doi/full/10.1021/acs.chemmater.0c03381)
