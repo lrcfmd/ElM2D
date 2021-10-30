@@ -20,7 +20,7 @@ from numpy.testing import assert_allclose
 from sklearn.metrics import mean_squared_error
 from scipy.spatial.distance import squareform
 
-from mat_discover.utils.Timer import Timer
+from ElM2D.utils.Timer import Timer
 from ElM2D import ElM2D as pip_ElM2D
 
 # from EleMD import EleMD
@@ -39,7 +39,7 @@ os.environ["INLINE"] = "never"
 os.environ["FASTMATH"] = "1"
 os.environ["TARGET"] = target
 
-from mat_discover.ElM2D import ElM2D_  # noqa
+from ElM2D import ElM2D_  # noqa
 
 reload(ElM2D_)
 
