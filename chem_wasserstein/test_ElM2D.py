@@ -72,7 +72,7 @@ class Testing(unittest.TestCase):
         # 500 x 500 distance matrix
         if nformulas > 500:
             raise ValueError(
-                "nformulas>500, should be <=500 (nformulas=={})".format(nformulas)
+                "nformulas>500, should be <=500 (received: {})".format(nformulas)
             )
         dm_network = genfromtxt(
             join(dirname(relpath(__file__)), "ElM2D_0-4-0_ElMD_0-4-3.csv"),
