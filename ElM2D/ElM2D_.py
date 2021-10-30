@@ -58,7 +58,7 @@ import plotly.io as pio
 from pqdm.processes import pqdm
 
 from ElMD import ElMD, EMD
-from mat_discover.ElM2D.njit_dist_matrix_full import dist_matrix as cpu_dist_matrix
+from dist_matrix.njit_dist_matrix_full import dist_matrix as cpu_dist_matrix
 
 # overriden by ElM2D class if self.target is not None
 use_cuda = cuda.is_available()
@@ -87,7 +87,7 @@ if use_cuda:
     # # to overwrite env vars (source: https://stackoverflow.com/a/1254379/13697228)
     # reload(cuda_dist_matrix)
     # gpu_dist_matrix = cuda_dist_matrix.dist_matrix
-    from mat_discover.ElM2D.cuda_dist_matrix_full import dist_matrix as gpu_dist_matrix
+    from dist_matrix.cuda_dist_matrix_full import dist_matrix as gpu_dist_matrix
 else:
     gpu_dist_matrix = None
 
