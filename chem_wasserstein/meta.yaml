@@ -1,0 +1,51 @@
+{% set name = "chem_wasserstein" %}
+{% set version = "1.0.1" %}
+
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/chem_wasserstein-{{ version }}.tar.gz
+  sha256: 006bb560a4ecf20881a5b2fbaf468081169b3afe1bda2f6406e301f2af19692c
+
+build:
+  number: 0
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv
+
+requirements:
+  host:
+    - pip
+    - python >=3.6,<3.10
+  run:
+    - dist_matrix >=1.0.1
+    - elmd ==0.4.8
+    - numba >=0.53.1
+    - pandas
+    - plotly
+    - pqdm ==0.1.0
+    - python >=3.6,<3.10
+    - scikit-learn
+    - scipy
+    - tqdm
+    - umap-learn
+
+test:
+  imports:
+    - chem_wasserstein
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  home: https://pypi.org/project/chem_wasserstein/
+  summary: A high performance mapping class to construct ElM2D plots from large datasets of inorganic compositions.
+  license: GPL-3.0
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - sgbaird
